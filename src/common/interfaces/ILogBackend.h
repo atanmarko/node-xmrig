@@ -37,7 +37,7 @@ public:
         WARNING,
         NOTICE,
         INFO,
-        DEBUG
+        DEBUG_LOG
     };
 
 #   ifdef APP_DEBUG

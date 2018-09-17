@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 2.8)
 project(xmrig)
 
 option(WITH_LIBCPUID "Use Libcpuid" ON)
-option(WITH_AEON     "CryptoNight-Lite support" ON)
-option(WITH_SUMO     "CryptoNight-Heavy support" ON)
-option(WITH_HTTPD    "HTTP REST API" ON)
+option(WITH_AEON     "CryptoNight-Lite support" OFF)
+option(WITH_SUMO     "CryptoNight-Heavy support" OFF)
+option(WITH_HTTPD    "HTTP REST API" OFF)
 option(BUILD_STATIC  "Build static binary" OFF)
 
 include (CheckIncludeFile)

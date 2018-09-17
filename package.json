@@ -1,0 +1,20 @@
+{
+  "name": "node-xmrig-cpu",
+  "version": "0.0.1",
+  "main": "bindings.js",
+  "scripts": {
+    "build": "node-gyp build",
+    "install": "node-gyp rebuild"
+  },
+  "dependencies": {
+    "bindings": "*",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "fs": "0.0.1-security",
+    "nan": "^2.10.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/atanmarko/xmrig.git"
+  }
+}

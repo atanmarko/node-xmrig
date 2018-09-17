@@ -21,11 +21,22 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "App.h"
+#include <nan.h>
+#include "NodeXmrigCpu.h"
 
 
-int main(int argc, char **argv) {
-    App app(argc, argv);
+int test = 0;
 
-    return app.exec();
+//int main(int argc, char **argv) {
+//    NodeApp app(argc, argv);
+//
+//    return app.exec();
+//}
+
+
+
+NAN_MODULE_INIT(InitModule) {
+  NodeXmrigCpu::Init(target);
 }
+
+NODE_MODULE(xmrigCpu, InitModule);

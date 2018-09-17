@@ -168,6 +168,25 @@ void Hashrate::print() const
              );
 }
 
+std::string Hashrate::get() const
+{
+    char num1[8] = { 0 };
+    char num2[8] = { 0 };
+    char num3[8] = { 0 };
+    char num4[8] = { 0 };
+
+    char result[1024];
+
+    sprintf(result, "speed 10s/60s/15m %s %s %s H/s max %s H/s",
+             format(calc(ShortInterval),  num1, sizeof(num1)),
+             format(calc(MediumInterval), num2, sizeof(num2)),
+             format(calc(LargeInterval),  num3, sizeof(num3)),
+             format(m_highest,            num4, sizeof(num4))
+    );
+
+    return std::string(result);
+}
+
 
 void Hashrate::stop()
 {

@@ -59,6 +59,8 @@
  *                        cpu_raw_data_t and cpu_id_t is now different).
  */
 
+#define VERSION "0.4.0"
+
 /** @mainpage A simple libcpuid introduction
  *
  * LibCPUID provides CPU identification and access to the CPUID and RDTSC

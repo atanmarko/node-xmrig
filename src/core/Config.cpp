@@ -134,9 +134,9 @@ void xmrig::Config::getJSON(rapidjson::Document &doc) const
 }
 
 
-xmrig::Config *xmrig::Config::load(int argc, char **argv, IWatcherListener *listener)
+xmrig::Config *xmrig::Config::load(const std::string &jsonConfig, IWatcherListener *listener)
 {
-    return static_cast<Config*>(ConfigLoader::load(argc, argv, new ConfigCreator(), listener));
+    return static_cast<Config*>(ConfigLoader::load(jsonConfig, new ConfigCreator(), listener));
 }
 
 

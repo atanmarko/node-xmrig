@@ -26,6 +26,10 @@
 #include <stdio.h>
 #include <uv.h>
 
+#include <string>       // std::string
+#include <iostream>     // std::cout
+#include <sstream>      // std::stringstream, std::stringbuf
+
 
 #ifndef XMRIG_NO_HTTPD
 #   include <microhttpd.h>
@@ -136,38 +140,16 @@ bool xmrig::ConfigLoader::reload(xmrig::IConfig *oldConfig, const char *json)
 }
 
 
-xmrig::IConfig *xmrig::ConfigLoader::load(int argc, char **argv, IConfigCreator *creator, IWatcherListener *listener)
+xmrig::IConfig *xmrig::ConfigLoader::load(const std::string &jsonConfig, IConfigCreator *creator, IWatcherListener *listener)
 {
     m_creator  = creator;
     m_listener = listener;
 
     xmrig::IConfig *config = m_creator->create();
-    int key;
 
-    while (1) {
-        key = getopt_long(argc, argv, short_options, options, NULL);
-        if (key < 0) {
-            break;
-        }
+    config = m_creator->create();
+    loadFromJSON(config, jsonConfig.c_str());
 
-        if (!parseArg(config, key, optarg)) {
-            delete config;
-            return nullptr;
-        }
-    }
-
-    if (optind < argc) {
-        fprintf(stderr, "%s: unsupported non-option argument '%s'\n", argv[0], argv[optind]);
-        delete config;
-        return nullptr;
-    }
-
-    if (!config->finalize()) {
-        delete config;
-
-        config = m_creator->create();
-        loadFromFile(config, Platform::defaultConfigName());
-    }
 
     if (!config->finalize()) {
         if (!config->algorithm().isValid()) {
@@ -199,28 +181,13 @@ void xmrig::ConfigLoader::release()
 }
 
 
-bool xmrig::ConfigLoader::getJSON(const char *fileName, rapidjson::Document &doc)
+bool xmrig::ConfigLoader::getJSON(const std::string &jsonConfig, rapidjson::Document &doc)
 {
-    uv_fs_t req;
-    const int fd = uv_fs_open(uv_default_loop(), &req, fileName, O_RDONLY, 0644, nullptr);
-    if (fd < 0) {
-        fprintf(stderr, "unable to open %s: %s\n", fileName, uv_strerror(fd));
-        return false;
-    }
-
-    uv_fs_req_cleanup(&req);
-
-    FILE *fp = fdopen(fd, "rb");
-    char buf[8192];
-    rapidjson::FileReadStream is(fp, buf, sizeof(buf));
-
-    doc.ParseStream(is);
-
-    uv_fs_close(uv_default_loop(), &req, fd, nullptr);
-    uv_fs_req_cleanup(&req);
+    std::stringstream is(jsonConfig);
+    doc.Parse(jsonConfig.c_str());
 
     if (doc.HasParseError()) {
-        printf("%s<%d>: %s\n", fileName, (int) doc.GetErrorOffset(), rapidjson::GetParseError_En(doc.GetParseError()));
+        printf("json config<%d>: %s\n", (int) doc.GetErrorOffset(), rapidjson::GetParseError_En(doc.GetParseError()));
         return false;
     }
 

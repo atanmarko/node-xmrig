@@ -53,6 +53,7 @@ public:
     static size_t hugePages();
     static size_t threads();
     static void printHashrate(bool detail);
+    static std::string getHashrate(bool detail);
     static void setEnabled(bool enabled);
     static void setJob(const Job &job, bool donate);
     static void start(xmrig::Controller *controller);

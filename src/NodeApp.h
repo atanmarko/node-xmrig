@@ -21,12 +21,21 @@
  *   along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __HASHRATE_H__
-#define __HASHRATE_H__
+#ifndef __APP_H__
+#define __APP_H__
 
 
-#include <stdint.h>
 #include <uv.h>
+
+
+#include "common/interfaces/IConsoleListener.h"
+#include <string>
+
+
+class Console;
+class Httpd;
+class Network;
+class Options;
 
 
 namespace xmrig {
@@ -34,43 +43,32 @@ namespace xmrig {
 }
 
 
-class Hashrate
+class NodeApp : public IConsoleListener
 {
 public:
-    enum Intervals {
-        ShortInterval  = 10000,
-        MediumInterval = 60000,
-        LargeInterval  = 900000
-    };
+  NodeApp(const std::string jsonConfig);
+  ~NodeApp();
 
-    Hashrate(size_t threads, xmrig::Controller *controller);
-    double calc(size_t ms) const;
-    double calc(size_t threadId, size_t ms) const;
-    void add(size_t threadId, uint64_t count, uint64_t timestamp);
-    void print() const;
-    std::string get() const;
-    void stop();
-    void updateHighest();
+  int exec();
+  void close();
+  std::string getStatus();
 
-    inline double highest() const { return m_highest; }
-    inline size_t threads() const { return m_threads; }
-
-    static const char *format(double h, char *buf, size_t size);
+protected:
+  void onConsoleCommand(char command) override;
 
 private:
-    static void onReport(uv_timer_t *handle);
+  void background();
+  void release();
 
-    constexpr static size_t kBucketSize = 2 << 11;
-    constexpr static size_t kBucketMask = kBucketSize - 1;
+  static NodeApp *m_self;
 
-    double m_highest;
-    size_t m_threads;
-    uint32_t* m_top;
-    uint64_t** m_counts;
-    uint64_t** m_timestamps;
-    uv_timer_t m_timer;
-    xmrig::Controller *m_controller;
+  Console *m_console;
+  Httpd *m_httpd;
+  uv_signal_t m_sigHUP;
+  uv_signal_t m_sigINT;
+  uv_signal_t m_sigTERM;
+  xmrig::Controller *m_controller;
 };
 
 
-#endif /* __HASHRATE_H__ */
+#endif /* __APP_H__ */

@@ -26,6 +26,7 @@
 
 
 #include <stdint.h>
+#include <string>
 
 
 #include "rapidjson/fwd.h"
@@ -46,15 +47,15 @@ class IConfig;
 class ConfigLoader
 {
 public:
-    static bool loadFromFile(IConfig *config, const char *fileName);
+    static bool loadFromFile(xmrig::IConfig *config, const char *fileName);
     static bool loadFromJSON(IConfig *config, const char *json);
     static bool loadFromJSON(IConfig *config, const rapidjson::Document &doc);
     static bool reload(IConfig *oldConfig, const char *json);
-    static IConfig *load(int argc, char **argv, IConfigCreator *creator, IWatcherListener *listener);
+    static IConfig *load(const std::string &jsonConfig, IConfigCreator *creator, IWatcherListener *listener);
     static void release();
 
 private:
-    static bool getJSON(const char *fileName, rapidjson::Document &doc);
+    static bool getJSON(const std::string &jsonConfig, rapidjson::Document &doc);
     static bool parseArg(IConfig *config, int key, const char *arg);
     static void parseJSON(IConfig *config, const struct option *option, const rapidjson::Value &object);
     static void showUsage();

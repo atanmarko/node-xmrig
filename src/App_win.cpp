@@ -26,7 +26,7 @@
 #include <windows.h>
 
 
-#include "App.h"
+#include "NodeApp.h"
 #include "core/Controller.h"
 #include "core/Config.h"
 

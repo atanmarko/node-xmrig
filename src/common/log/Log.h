@@ -82,7 +82,7 @@ private:
 #define LOG_INFO(x, ...)   Log::i()->message(ILogBackend::INFO,    x, ##__VA_ARGS__)
 
 #ifdef APP_DEBUG
-#   define LOG_DEBUG(x, ...)      Log::i()->message(ILogBackend::DEBUG,   x, ##__VA_ARGS__)
+#   define LOG_DEBUG(x, ...)      Log::i()->message(ILogBackend::DEBUG_LOG,   x, ##__VA_ARGS__)
 #else
 #   define LOG_DEBUG(x, ...)
 #endif

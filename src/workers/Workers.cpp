@@ -121,6 +121,17 @@ void Workers::printHashrate(bool detail)
     m_hashrate->print();
 }
 
+std::string Workers::getHashrate(bool detail)
+{
+    assert(m_controller != nullptr);
+    if (!m_controller) {
+        return std::string();
+    }
+
+    std::string result = m_hashrate->get();
+
+    return result;
+}
 
 void Workers::setEnabled(bool enabled)
 {

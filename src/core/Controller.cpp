@@ -92,11 +92,11 @@ xmrig::Config *xmrig::Controller::config() const
 }
 
 
-int xmrig::Controller::init(int argc, char **argv)
+int xmrig::Controller::init(const std::string &jsonConfig)
 {
     Cpu::init();
 
-    d_ptr->config = xmrig::Config::load(argc, argv, this);
+    d_ptr->config = xmrig::Config::load(jsonConfig, this);
     if (!d_ptr->config) {
         return 1;
     }

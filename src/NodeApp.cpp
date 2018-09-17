@@ -23,42 +23,97 @@
 
 
 #include <stdlib.h>
-#include <signal.h>
-#include <errno.h>
-#include <unistd.h>
+#include <uv.h>
 
 
+#include "api/Api.h"
 #include "NodeApp.h"
+#include "common/Console.h"
 #include "common/log/Log.h"
+#include "common/Platform.h"
 #include "core/Config.h"
 #include "core/Controller.h"
+#include "Cpu.h"
+#include "crypto/CryptoNight.h"
+#include "Mem.h"
+#include "net/Network.h"
+#include "Summary.h"
+#include "version.h"
+#include "workers/Workers.h"
+
+#include <string>
 
 
-void NodeApp::background()
+NodeApp *NodeApp::m_self = nullptr;
+
+
+
+NodeApp::NodeApp(const std::string jsonConfig) :
+    m_console(nullptr),
+    m_httpd(nullptr)
 {
-    signal(SIGPIPE, SIG_IGN);
+    m_self = this;
 
-    if (!m_controller->config()->isBackground()) {
+    m_controller = new xmrig::Controller();
+    if (m_controller->init(jsonConfig) != 0) {
         return;
     }
+}
 
-    int i = fork();
-    if (i < 0) {
-        exit(1);
+
+NodeApp::~NodeApp()
+{
+    delete m_console;
+    delete m_controller;
+}
+
+
+int NodeApp::exec()
+{
+    if (!m_controller->isReady()) {
+        return 2;
     }
 
-    if (i > 0) {
-        exit(0);
+    background();
+
+    Mem::init(m_controller->config()->isHugePages());
+
+    Summary::print(m_controller);
+
+    if (m_controller->config()->isDryRun()) {
+        LOG_NOTICE("OK");
+        release();
+
+        return 0;
     }
 
-    i = setsid();
+    Workers::start(m_controller);
 
-    if (i < 0) {
-        LOG_ERR("setsid() failed (errno = %d)", errno);
-    }
+    m_controller->network()->connect();
 
-    i = chdir("/");
-    if (i < 0) {
-        LOG_ERR("chdir() failed (errno = %d)", errno);
-    }
+    release();
+    return 0;
+}
+
+
+void NodeApp::onConsoleCommand(char command)
+{
+
+}
+
+
+void NodeApp::close()
+{
+    m_controller->network()->stop();
+    Workers::stop();
+}
+
+std::string NodeApp::getStatus()
+{
+    return Workers::getHashrate(true);
+};
+
+
+void NodeApp::release()
+{
 }
