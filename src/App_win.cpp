@@ -31,7 +31,7 @@
 #include "core/Config.h"
 
 
-void App::background()
+void NodeApp::background()
 {
     if (!m_controller->config()->isBackground()) {
         return;
