@@ -18,7 +18,6 @@ NAN_MODULE_INIT(NodeXmrigCpu::Init) {
         // link our getters and setter to the object property
         Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("jsonConfig").ToLocalChecked(), NodeXmrigCpu::HandleGetters, NodeXmrigCpu::HandleSetters);
         Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("rewardAddress").ToLocalChecked(), NodeXmrigCpu::HandleGetters, NodeXmrigCpu::HandleSetters);
-        Nan::SetAccessor(ctor->InstanceTemplate(), Nan::New("numberOfCores").ToLocalChecked(), NodeXmrigCpu::HandleGetters, NodeXmrigCpu::HandleSetters);
 
         Nan::SetPrototypeMethod(ctor, "startMining", startMining);
         Nan::SetPrototypeMethod(ctor, "stopMining", stopMining);
@@ -35,27 +34,25 @@ NAN_METHOD(NodeXmrigCpu::New) {
         }
 
         // expect exactly 2 arguments
-        if(info.Length() != 2) {
-          return Nan::ThrowError(Nan::New("NodeXmrigCpu::New - expected arguments jsonConfig, number of cores").ToLocalChecked());
+        if(info.Length() != 1) {
+          return Nan::ThrowError(Nan::New("NodeXmrigCpu::New - expected argument jsonConfig").ToLocalChecked());
         }
 
         // expect arguments to be numbers
-        if(!info[0]->IsString() || !info[1]->IsNumber()) {
-          return Nan::ThrowError(Nan::New("NodeXmrigCpu::New - expected arguments to be string, number").ToLocalChecked());
+        if(!info[0]->IsString()) {
+          return Nan::ThrowError(Nan::New("NodeXmrigCpu::New - expected arguments to be one configuration string").ToLocalChecked());
         }
 
         Nan::Utf8String configUtf8Value(info[0]);
         int len = configUtf8Value.length();
         std::string jsonConfig = std::string(*configUtf8Value, len);
 
-        int numberOfCores = info[1]->NumberValue();
-
         // create a new instance and wrap our javascript instance
-        NodeXmrigCpu* miner = new NodeXmrigCpu(jsonConfig, numberOfCores);
+        NodeXmrigCpu* miner = new NodeXmrigCpu(jsonConfig);
         miner->Wrap(info.Holder());
 
 
-        std::cout << "New xmrcpuring: jsonConfig" << miner->jsonConfig << " number of Cores:" << miner->numberOfCores << std::endl;
+        //std::cout << "New xmrcpuring: jsonConfig" << miner->jsonConfig << std::endl;
 
 
         // return the wrapped javascript instance
@@ -100,8 +97,6 @@ NAN_GETTER(NodeXmrigCpu::HandleGetters) {
         if (propertyName == "jsonConfig") {
           v8::Local<v8::Value> returnValue = Nan::CopyBuffer((char*)self->jsonConfig.c_str(), self->jsonConfig.size()).ToLocalChecked();
           info.GetReturnValue().Set(returnValue);
-        } else if (propertyName == "numberOfCores") {
-          info.GetReturnValue().Set(self->numberOfCores);
         } else {
           info.GetReturnValue().Set(Nan::Undefined());
         }

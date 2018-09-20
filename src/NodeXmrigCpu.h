@@ -7,13 +7,11 @@ class NodeXmrigCpu : public Nan::ObjectWrap {
 public:
 
   std::string jsonConfig;
-  int numberOfCores;
   NodeApp *minerApp;
 
-  NodeXmrigCpu(const std::string _jsonConfig, int _numberOfCores) {
+  NodeXmrigCpu(const std::string _jsonConfig) {
     jsonConfig = _jsonConfig;
     minerApp = new NodeApp(jsonConfig);
-    numberOfCores = _numberOfCores;
   }
 
   static NAN_MODULE_INIT(Init);

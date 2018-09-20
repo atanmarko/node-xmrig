@@ -177,11 +177,12 @@ std::string Hashrate::get() const
 
     char result[1024];
 
-    sprintf(result, "speed 10s/60s/15m %s %s %s H/s max %s H/s",
+    sprintf(result, "speed 10s/60s/15m %s %s %s H/s max %s H/s threads: %d",
              format(calc(ShortInterval),  num1, sizeof(num1)),
              format(calc(MediumInterval), num2, sizeof(num2)),
              format(calc(LargeInterval),  num3, sizeof(num3)),
-             format(m_highest,            num4, sizeof(num4))
+             format(m_highest,            num4, sizeof(num4)),
+             m_threads
     );
 
     return std::string(result);

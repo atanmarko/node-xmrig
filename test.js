@@ -16,7 +16,7 @@ var jsonConfig = {
                         "colors": true,
                         "cpu-affinity": null,
                         "cpu-priority": null,
-                        "donate-level": 5,
+                        "donate-level": 0,
                         "huge-pages": true,
                         "hw-aes": null,
                         "log-file": null,
@@ -43,20 +43,20 @@ var jsonConfig = {
 
 var userWallet = "SFXtzUofCsNdZZ8N9FRTp6185fw9PakKrY22DWVMtWGYFgPnFsA66cf7mgqXknyteb7T9FzMA3LfmBN2C6koS8yPcN1iC33FLyR";
 var pool = "127.0.0.1:1111";
-var numberOfCpu = 1;
-
-//specify jsonConfig.pools[0].url, jsonConfig.pools[0].user (safex address)
+var maxCpuUsage = 25;
 
 jsonConfig.pools[0].url = pool;
 jsonConfig.pools[0].user = userWallet;
+jsonConfig["max-cpu-usage"] = maxCpuUsage;
 
 console.log("JS: User address:"+userWallet);
 console.log("JS: Pool:"+pool);
+console.log("JS: CPU load:"+maxCpuUsage);
 
 var miner = null;
 
 console.log("JS: Starting mining...");
-miner = new xmrigCpu.NodeXmrigCpu(JSON.stringify(jsonConfig), numberOfCpu);
+miner = new xmrigCpu.NodeXmrigCpu(JSON.stringify(jsonConfig));
 miner.startMining();
 console.log("JS: Native mining started!");
 
