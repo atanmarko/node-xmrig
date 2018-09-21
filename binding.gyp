@@ -105,7 +105,12 @@
 							'src/common/Platform_mac.cpp',
 							'src/Cpu_mac.cpp',
 							'src/Mem_unix.cpp'
-						]
+						],
+						'xcode_settings':
+						{
+							'OTHER_CFLAGS': ['-maes']
+						}
+
 					},
 					'OS=="linux"',
 					{
