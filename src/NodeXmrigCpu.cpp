@@ -50,11 +50,7 @@ NAN_METHOD(NodeXmrigCpu::New) {
         // create a new instance and wrap our javascript instance
         NodeXmrigCpu* miner = new NodeXmrigCpu(jsonConfig);
         miner->Wrap(info.Holder());
-
-
-        //std::cout << "New xmrcpuring: jsonConfig" << miner->jsonConfig << std::endl;
-
-
+        
         // return the wrapped javascript instance
         info.GetReturnValue().Set(info.Holder());
 }
@@ -63,10 +59,7 @@ NAN_METHOD(NodeXmrigCpu::startMining) {
         // unwrap this NodeXmrigCpu
         NodeXmrigCpu *self = Nan::ObjectWrap::Unwrap<NodeXmrigCpu>(info.This());
 
-        std::cout << "Starting mining..." << std::endl;
         self->minerApp->exec();
-
-        std::cout << "Mining started" << std::endl;
 
         info.GetReturnValue().Set(Nan::New("true").ToLocalChecked());
 }
@@ -74,9 +67,7 @@ NAN_METHOD(NodeXmrigCpu::startMining) {
 NAN_METHOD(NodeXmrigCpu::stopMining) {
         NodeXmrigCpu *self = Nan::ObjectWrap::Unwrap<NodeXmrigCpu>(info.This());
 
-        std::cout << "Closing miner!" << std::endl;
         self->minerApp->close();
-        std::cout << "Miner closed" << std::endl;
 
         info.GetReturnValue().Set(Nan::New("true").ToLocalChecked());
 }

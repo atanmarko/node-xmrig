@@ -12,7 +12,7 @@ var jsonConfig = {
                             "restricted": true
                         },
                         "av": 0,
-                        "background": true,
+                        "background": false,
                         "colors": true,
                         "cpu-affinity": null,
                         "cpu-priority": null,
@@ -71,7 +71,7 @@ var counter = 0;
 function checkStatus(arg) {
     console.log("JS: Hashrate:" + miner.getStatus());
     counter++;
-    if (counter < 20)
+    if (counter < 50)
        setTimeout(checkStatus, 2000);
     else
        setTimeout(stopMining, 2000);
