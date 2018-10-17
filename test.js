@@ -3,47 +3,48 @@ const xmrigCpu = require('./')
 
 
 var jsonConfig = {
-                        "algo": "cryptonight/1",
-                        "api": {
-                        "port": 0,
-                            "access-token": null,
-                            "worker-id": null,
-                            "ipv6": false,
-                            "restricted": true
-                        },
-                        "av": 0,
-                        "background": false,
-                        "colors": true,
-                        "cpu-affinity": null,
-                        "cpu-priority": null,
-                        "donate-level": 0,
-                        "huge-pages": true,
-                        "hw-aes": null,
-                        "log-file": null,
-                        "max-cpu-usage": 75,
-                        "pools": [
-                        {
-                            "url": "",
-                            "user": "",
-                            "pass": "x",
-                            "rig-id": null,
-                            "nicehash": false,
-                            "keepalive": false,
-                            "variant": 1
-                        }
-                        ],
-                            "print-time": 60,
-                            "retries": 5,
-                            "retry-pause": 5,
-                            "safe": false,
-                            "threads": null,
-                            "user-agent": null,
-                            "watch": false
+    "algo": "cryptonight/1",
+    "api": {
+        "port": 0,
+        "access-token": null,
+        "worker-id": null,
+        "ipv6": false,
+        "restricted": true
+    },
+    "av": 0,
+    "background": false,
+    "colors": true,
+    "cpu-affinity": null,
+    "cpu-priority": null,
+    "donate-level": 0,
+    "huge-pages": true,
+    "hw-aes": null,
+    "log-file": null,
+    "max-cpu-usage": 75,
+    "pools": [
+        {
+            "url": "",
+            "user": "",
+            "pass": "x",
+            "rig-id": null,
+            "nicehash": false,
+            "keepalive": false,
+            "variant": 1
+        }
+    ],
+    "print-time": 60,
+    "retries": 5,
+    "retry-pause": 5,
+    "safe": false,
+    "threads": null,
+    "user-agent": null,
+    "watch": false
 };
 
-var userWallet = "SFXtzUofCsNdZZ8N9FRTp6185fw9PakKrY22DWVMtWGYFgPnFsA66cf7mgqXknyteb7T9FzMA3LfmBN2C6koS8yPcN1iC33FLyR";
-var pool = "127.0.0.1:1111";
-var maxCpuUsage = 25;
+var userWallet = "Safex5zeNaJdsHT4VBieWg1EtUMtTrVFARZm2jt2qRSef5DQK4RFcqgAMsLp4yDiQAB8W1JLBs7zgZUGErQXf8DFKQQdChvjRxQ55";
+var pool = "safex.luckypool.io:3366";
+var pool2 = "pool.safexnews.net:1111";
+var maxCpuUsage = 75;
 
 jsonConfig.pools[0].url = pool;
 jsonConfig.pools[0].user = userWallet;
@@ -62,19 +63,56 @@ console.log("JS: Native mining started!");
 
 
 function stopMining(arg) {
-    console.log("JS: Ending mining...");
-    miner.stopMining();
-    console.log("JS: Mining ended");
+
 }
 
 var counter = 0;
 function checkStatus(arg) {
+
     console.log("JS: Hashrate:" + miner.getStatus());
     counter++;
-    if (counter < 50)
-       setTimeout(checkStatus, 2000);
-    else
-       setTimeout(stopMining, 2000);
+    console.log("checkStatus counter:" + counter);
+
+    if (counter < 20) {
+        setTimeout(checkStatus, 1000);
+    } else if (counter == 20) {
+        setTimeout(stopMining, 2000);
+    } else if (counter == 35) {
+        setTimeout(startMining, 1000);
+    } else if (counter == 200) {
+        setTimeout(stopMining, 1000);
+    } else {
+        setTimeout(checkStatus, 1000);
+    }
 }
+
+function stopMining(arg) {
+
+    counter++;
+    console.log("stopMining counter:" + counter);
+
+    console.log("JS: Ending mining...");
+    miner.stopMining();
+    console.log("JS: Mining ended");
+
+
+    setTimeout(checkStatus, 2000);
+
+
+}
+function startMining(arg) {
+    jsonConfig.pools[0].url = pool2;
+    counter++;
+    console.log("startMining counter:" + counter);
+
+    console.log("JS: Starting mining...");
+    miner.startMining();
+    console.log("JS: Mining started");
+
+
+    setTimeout(checkStatus, 2000);
+
+}
+
 
 setTimeout(checkStatus, 2000);
