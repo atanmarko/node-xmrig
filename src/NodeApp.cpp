@@ -96,6 +96,16 @@ int NodeApp::exec()
 }
 
 
+void NodeApp::reloadConfig(const std::string jsonConfig)
+{
+    Workers::restart();
+    if (m_controller->reloadConfig(jsonConfig) != 0) {
+        return;
+    }
+
+}
+
+
 void NodeApp::onConsoleCommand(char command)
 {
 

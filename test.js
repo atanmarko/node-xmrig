@@ -102,6 +102,9 @@ function stopMining(arg) {
 }
 function startMining(arg) {
     jsonConfig.pools[0].url = pool2;
+    //here reload config
+    console.log("JS: Reloading config...");
+    miner.reloadConfig(JSON.stringify(jsonConfig));
     counter++;
     console.log("startMining counter:" + counter);
 

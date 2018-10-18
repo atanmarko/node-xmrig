@@ -139,6 +139,28 @@ bool xmrig::ConfigLoader::reload(xmrig::IConfig *oldConfig, const char *json)
     return true;
 }
 
+bool xmrig::ConfigLoader::reload(xmrig::IConfig *oldConfig, const std::string &jsonConfig)
+{
+    xmrig::IConfig *config = m_creator->create();
+    if (!loadFromJSON(config, jsonConfig.c_str())) {
+        delete config;
+
+        return false;
+    }
+
+    config->setFileName(oldConfig->fileName());
+    const bool saved = config->save();
+
+    if (config->isWatch() && m_watcher && saved) {
+        delete config;
+
+        return true;
+    }
+
+    m_listener->onNewConfig(config);
+    return true;
+}
+
 
 xmrig::IConfig *xmrig::ConfigLoader::load(const std::string &jsonConfig, IConfigCreator *creator, IWatcherListener *listener)
 {

@@ -52,6 +52,7 @@ public:
   int exec();
   void close();
   std::string getStatus();
+  void reloadConfig(const std::string jsonConfig);
 
 protected:
   void onConsoleCommand(char command) override;

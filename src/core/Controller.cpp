@@ -36,6 +36,8 @@
 #include "Cpu.h"
 #include "net/Network.h"
 
+#include <iostream>
+
 
 #ifdef HAVE_SYSLOG_H
 #   include "common/log/SysLog.h"
@@ -121,6 +123,21 @@ int xmrig::Controller::init(const std::string &jsonConfig)
 
     d_ptr->network = new Network(this);
     return 0;
+}
+
+int xmrig::Controller::reloadConfig(const std::string &jsonConfig)
+{
+
+  if (!xmrig::Config::reload(d_ptr->config, jsonConfig))
+  {
+    return 1;
+  }
+
+  Network *previousNetwork = d_ptr->network;
+  d_ptr->network = new Network(this);
+  delete previousNetwork;
+
+  return 0;
 }
 
 

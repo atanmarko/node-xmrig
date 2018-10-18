@@ -59,6 +59,7 @@ public:
     static void start(xmrig::Controller *controller);
     static void stop();
     static void submit(const JobResult &result);
+    static void restart();
 
     static inline bool isEnabled()                               { return m_enabled; }
     static inline bool isOutdated(uint64_t sequence)             { return m_sequence.load(std::memory_order_relaxed) != sequence; }

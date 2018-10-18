@@ -49,6 +49,7 @@ public:
     bool isReady() const;
     Config *config() const;
     int init(const std::string &jsonConfig);
+    int reloadConfig(const std::string &jsonConfig);
     Network *network() const;
     void addListener(IControllerListener *listener);
 

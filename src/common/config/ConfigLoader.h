@@ -51,6 +51,7 @@ public:
     static bool loadFromJSON(IConfig *config, const char *json);
     static bool loadFromJSON(IConfig *config, const rapidjson::Document &doc);
     static bool reload(IConfig *oldConfig, const char *json);
+    static bool reload(xmrig::IConfig *oldConfig, const std::string &jsonConfig);
     static IConfig *load(const std::string &jsonConfig, IConfigCreator *creator, IWatcherListener *listener);
     static void release();
 

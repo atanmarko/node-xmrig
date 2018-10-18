@@ -59,6 +59,20 @@ uv_timer_t Workers::m_timer;
 xmrig::Controller *Workers::m_controller = nullptr;
 
 
+
+void Workers::restart()
+{
+    Workers::m_active = false;
+    Workers::m_enabled = true;
+    Workers::m_hashrate = nullptr;
+    Workers::m_listener = nullptr;
+    Workers::m_controller = nullptr;
+    Workers::m_status = LaunchStatus{};
+    Workers::m_sequence = 0;
+    Workers::m_queue.clear();
+    Workers::m_workers.clear();
+}
+
 Job Workers::job()
 {
     uv_rwlock_rdlock(&m_rwlock);

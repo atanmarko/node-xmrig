@@ -20,6 +20,7 @@ public:
   static NAN_METHOD(startMining);
   static NAN_METHOD(stopMining);
   static NAN_METHOD(getStatus);
+  static NAN_METHOD(reloadConfig);
 
   static NAN_GETTER(HandleGetters);
   static NAN_SETTER(HandleSetters);

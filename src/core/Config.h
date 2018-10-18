@@ -74,6 +74,7 @@ public:
 
     bool reload(const char *json);
 
+
     void getJSON(rapidjson::Document &doc) const override;
 
     inline AesMode aesMode() const                       { return m_aesMode; }
@@ -86,6 +87,7 @@ public:
     inline ThreadsMode threadsMode() const               { return m_threads.mode; }
 
     static Config *load(const std::string &jsonConfig, IWatcherListener *listener);
+    static bool reload(xmrig::IConfig *oldConfig, const std::string &jsonConfig);
 
 protected:
     bool finalize() override;

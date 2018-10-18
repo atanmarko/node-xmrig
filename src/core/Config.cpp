@@ -61,6 +61,11 @@ bool xmrig::Config::reload(const char *json)
     return xmrig::ConfigLoader::reload(this, json);
 }
 
+bool xmrig::Config::reload(xmrig::IConfig *oldConfig, const std::string &jsonConfig)
+{
+    return xmrig::ConfigLoader::reload(oldConfig, jsonConfig);
+}
+
 
 void xmrig::Config::getJSON(rapidjson::Document &doc) const
 {
