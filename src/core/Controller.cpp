@@ -135,7 +135,11 @@ int xmrig::Controller::reloadConfig(const std::string &jsonConfig)
 
   Network *previousNetwork = d_ptr->network;
   d_ptr->network = new Network(this);
-  delete previousNetwork;
+
+  //YES, we have memory leak here
+  // TODO debug proper resource deallocation
+
+  //delete previousNetwork;
 
   return 0;
 }
