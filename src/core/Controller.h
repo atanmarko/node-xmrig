@@ -26,7 +26,7 @@
 
 
 #include "common/interfaces/IWatcherListener.h"
-
+#include <memory>
 
 class Network;
 class StatsData;
@@ -50,7 +50,7 @@ public:
     Config *config() const;
     int init(const std::string &jsonConfig);
     int reloadConfig(const std::string &jsonConfig);
-    Network *network() const;
+    std::unique_ptr<Network>& network() const;
     void addListener(IControllerListener *listener);
 
 protected:

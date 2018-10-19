@@ -35,6 +35,7 @@
 #include "core/Controller.h"
 #include "Cpu.h"
 #include "net/Network.h"
+#include "workers/Workers.h"
 
 #include <iostream>
 
@@ -55,12 +56,11 @@ public:
 
     inline ~ControllerPrivate()
     {
-        delete network;
         delete config;
     }
 
 
-    Network *network;
+    std::unique_ptr<Network> network;
     std::vector<xmrig::IControllerListener *> listeners;
     xmrig::Config *config;
 };
@@ -121,20 +121,18 @@ int xmrig::Controller::init(const std::string &jsonConfig)
     }
 #   endif
 
-    d_ptr->network = new Network(this);
+    d_ptr->network.reset(new Network(this));
     return 0;
 }
 
 int xmrig::Controller::reloadConfig(const std::string &jsonConfig)
 {
-
   if (!xmrig::Config::reload(d_ptr->config, jsonConfig))
   {
     return 1;
   }
 
-  Network *previousNetwork = d_ptr->network;
-  d_ptr->network = new Network(this);
+  d_ptr->network.reset(new Network(this));
 
   //YES, we have memory leak here
   // TODO debug proper resource deallocation
@@ -145,7 +143,7 @@ int xmrig::Controller::reloadConfig(const std::string &jsonConfig)
 }
 
 
-Network *xmrig::Controller::network() const
+std::unique_ptr<Network>& xmrig::Controller::network() const
 {
     assert(d_ptr->network != nullptr);
 

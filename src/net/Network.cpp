@@ -73,6 +73,9 @@ Network::Network(xmrig::Controller *controller) :
 
 Network::~Network()
 {
+    uv_timer_stop(&m_timer);
+    delete m_strategy;
+    delete m_donate;
 }
 
 
@@ -84,7 +87,7 @@ void Network::connect()
 
 void Network::stop()
 {
-    if (m_donate) {
+    if (m_donate != nullptr) {
         m_donate->stop();
     }
 
@@ -179,11 +182,9 @@ void Network::tick()
 {
     const uint64_t now = uv_now(uv_default_loop());
 
-    m_strategy->tick(now);
+    if(m_strategy != nullptr)
+        m_strategy->tick(now);
 
-    if (m_donate) {
-        m_donate->tick(now);
-    }
 
 #   ifndef XMRIG_NO_API
     Api::tick(m_state);

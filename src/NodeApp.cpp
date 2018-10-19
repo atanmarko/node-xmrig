@@ -116,6 +116,8 @@ void NodeApp::close()
 {
     m_controller->network()->stop();
     Workers::stop();
+
+     uv_stop(uv_default_loop());
 }
 
 std::string NodeApp::getStatus()
