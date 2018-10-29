@@ -54,7 +54,7 @@
 				"src/3rdparty/libcpuid/cpuid_main.c"
 			],
 			'cflags!': [
-				'-O3'
+				'-pthread'
 			],
 			'cflags': [
 				"-maes"
@@ -120,9 +120,13 @@
 							'src/Cpu_mac.cpp',
 							'src/Mem_unix.cpp'
 						],
+						'defines': [
+							'NDEBUG',
+							'XMRIG_NO_IPBC',
+							'__STDC_FORMAT_MACROS'
+						],
 						"link_settings": {
 							"libraries": [
-								"-lpthread",
 								"-lrt"
 							]
 						}
